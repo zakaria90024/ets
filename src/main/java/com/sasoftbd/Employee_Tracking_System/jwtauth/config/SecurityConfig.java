@@ -28,9 +28,10 @@ public class SecurityConfig {
         String[] PUBLIC_ENDPOINTS = {
                 "/api/auth/login",
                 "/api/auth/register",
+                "/api/auth/users/all/read",
                 "/api/functions",
-                "api/attendance/insert",
-                "api/attendance/read",
+                "/api/attendance/insert",
+                "/api/attendance/read",
                 "/api/location/insert",
                 "/api/location/read",
                 "/ws", "/api/notify"
@@ -71,5 +72,8 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 }
+
 

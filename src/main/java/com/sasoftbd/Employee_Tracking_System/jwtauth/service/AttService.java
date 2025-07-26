@@ -17,6 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -61,7 +63,25 @@ public class AttService {
         attendance.setStrATTEN_STATUS(req.strATTEN_STATUS());
         attendance.setStrATTEN_TIMEIN(req.strATTEN_TIMEIN());
         attendance.setStrEMP_CARD_NO(req.strEMP_CARD_NO());
-        attendance.setStrEMP_IMAGE(req.strEMP_IMAGE());
+
+
+        if (req.strEMP_IMAGE() != null && !req.strEMP_IMAGE().isEmpty()) {
+            try {
+                // 🧼 Clean Base64: remove newlines, carriage returns, spaces
+                String cleanedBase64 = req.strEMP_IMAGE().replaceAll("[\\r\\n\\s]", "");
+
+                // ✅ এখন decode করুন
+                byte[] imageBytes = Base64.getDecoder().decode(cleanedBase64);
+
+                System.out.println("✅ Image decoded successfully. Size: " + imageBytes.length);
+
+                attendance.setStrEMP_IMAGE(imageBytes);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                return ResponseEntity.badRequest().body(Map.of("error", "Invalid Base64 image format"));
+            }
+        }
+
         attendance.setStrLATITUDE(req.strLATITUDE());
         attendance.setStrLONGITUDE(req.strLONGITUDE());
         attendance.setStrROLE(req.strROLE());
@@ -74,7 +94,7 @@ public class AttService {
     }
 
 
-    public Attendance getAttendance(String strEMP_CARD_NO, String strATTEN_DATEIN) {
+    public List<Attendance> getAttendance(String strEMP_CARD_NO, String strATTEN_DATEIN) {
         return attendanceRepository
                 .findAttendance(strEMP_CARD_NO, strATTEN_DATEIN)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Attendance not found"));

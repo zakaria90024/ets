@@ -22,7 +22,9 @@ public class Attendance {
     private String strATTEN_STATUS;
     private String strATTEN_TIMEIN;
     private String strEMP_CARD_NO;
-    private String strEMP_IMAGE;
+    @Lob
+    @Column(name = "strEMP_IMAGE", columnDefinition = "LONGBLOB") // MySQL এর জন্য
+    private byte[] strEMP_IMAGE;
     private String strLATITUDE;
     private String strLONGITUDE;
     private String strROLE;
@@ -142,11 +144,11 @@ public class Attendance {
         this.strEMP_CARD_NO = strEMP_CARD_NO;
     }
 
-    public String getStrEMP_IMAGE() {
+    public byte[]  getStrEMP_IMAGE() {
         return strEMP_IMAGE;
     }
 
-    public void setStrEMP_IMAGE(String strEMP_IMAGE) {
+    public void setStrEMP_IMAGE(byte[] strEMP_IMAGE) {
         this.strEMP_IMAGE = strEMP_IMAGE;
     }
 

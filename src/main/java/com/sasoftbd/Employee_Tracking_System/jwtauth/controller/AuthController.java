@@ -81,37 +81,6 @@ public class AuthController {
     }
 
 
-//    only using user and password login
-//    @PostMapping("/login")
-//    public ResponseEntity<AuthResponseToken> login(@RequestBody AuthRequest req) {
-//        authManager.authenticate(new UsernamePasswordAuthenticationToken(req.username(), req.password()));
-//        final UserDetails userDetails = userService.loadUserByUsername(req.username());
-//
-//
-//        final String token = jwtUtil.generateToken(userDetails.getUsername());
-//        final String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
-//
-//        //String accessToken = jwtUtil.generateAccessToken(req.getUsername());
-//        //String refreshToken = jwtUtil.generateRefreshToken(request.getUsername());
-//
-//        // Optionally save refreshToken to DB
-//        RefreshToken rt = new RefreshToken();
-//        rt.setToken(refreshToken);
-//        rt.setUsername(req.username());
-//        rt.setExpiryDate(Instant.now().plus(7, ChronoUnit.DAYS));
-//        refreshTokenRepository.save(rt);
-//
-//        return ResponseEntity.ok(new AuthResponseToken(token, refreshToken));
-//
-////        return ResponseEntity.ok(
-////                Map.of(
-////                        "token", token,
-////                        "refreshToken", refreshToken
-////                )
-////        );
-//
-//    }
-
 
     //username/email, password both working ============================================================================
     @PostMapping("/login")
@@ -202,6 +171,36 @@ public class AuthController {
         response.setUser(userDTO);
 
         return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/users/all/read")
+    public ResponseEntity<List<Users>> getAllUsers() {
+        List<Users> users = userRepository.findAll();
+
+        List<Users> userDTOs = users.stream().map(user -> {
+            Users userDTO = new Users();
+            userDTO.setId(user.getId());
+            userDTO.setUsername(user.getUsername());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setRole(user.getRole());
+            userDTO.setStatus(user.isStatus());
+            userDTO.setImage(user.getImage());
+            userDTO.setNumber(user.getNumber());
+            userDTO.setCardNo(user.getCardNo());
+
+//            List<AccessModule> modules = user.getModules().stream().map(m -> {
+//                AccessModule dto = new AccessModule();
+//                dto.setModuleName(m.getModuleName());
+//                dto.setCanAccess(m.isCanAccess());
+//                return dto;
+//            }).collect(Collectors.toList());
+
+            //userDTO.setModules(modules);
+            return userDTO;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(userDTOs);
     }
 
 

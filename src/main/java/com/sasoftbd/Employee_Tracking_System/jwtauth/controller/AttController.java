@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,7 +35,7 @@ public class AttController {
     private AttService AttendanceService;
 
     @PostMapping("/read")
-    public Attendance getAttendance(@RequestBody AttendanceRequest request) {
+    public List<Attendance> getAttendance(@RequestBody AttendanceRequest request) {
         return AttendanceService.getAttendance(
                 request.getStrEMP_CARD_NO(),
                 request.getStrATTEN_DATEIN()
